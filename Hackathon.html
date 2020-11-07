@@ -33,7 +33,7 @@
 	
 	<body>
 		<div id="lockdownMap"></div>
-			
+			<h2> Test</h2>
 		<script>
 		
 		//creating the map and setting the default view and zoom
@@ -56,7 +56,7 @@
 		function onLocationFound(e) {
 			var radius = e.accuracy;
 
-			L.marker(e.latlng).addTo(mymap)
+			L.marker(e.latlng,{draggable:true}).addTo(mymap)
 				.bindPopup("You are within " + radius + " meters from this point").openPopup();
 
 			L.circle(e.latlng, radius).addTo(mymap);
