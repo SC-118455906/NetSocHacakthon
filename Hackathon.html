@@ -37,41 +37,60 @@
 	<body>
 		<div id="lockdownMap"></div>
 			
-		<script>
-		
+		<script>		
 		//creating the map and setting the default view and zoom
 		var mymap = L.map('lockdownMap').setView([0, 0], 3);	
-		
 		//crediting the openstreetmap attribution
-		const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMaps</a> contributors';
-		
+		const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMaps</a> contributors';	
 		//getting the tiles from OpenStreetMap
-		const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-			
+		const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';			
 		//applying the tiles
-		const tiles = L.tileLayer(tileUrl, { attribution });
-		
+		const tiles = L.tileLayer(tileUrl, { attribution });		
 		tiles.addTo(mymap);
 		
 		//finding the users current position
 		mymap.locate({setView: true, maxZoom: 16});	
 
 		function onLocationFound(e) {
-			var radius = e.accuracy;
+			//var radius = e.accuracy; unneeded
 
-			L.marker(e.latlng, {draggable:'true'}).addTo(mymap)
-				.bindPopup("You are within " + radius + " meters from this point").openPopup();
+			
+			var usersMarker = L.marker(e.latlng, {draggable:'false'}).addTo(mymap)
+						.bindPopup("This is your approx. location. Please drag marker to correct if needed").openPopup();
+				
 
-			L.circle(e.latlng, radius).addTo(mymap);
+			var usersCircle = L.circle(e.latlng, 5000).addTo(mymap)
+				.bindPopup("This is your 5km radius").openPopup();
+
+			usersMarker.on('dragend', function(e){
+				var allowedRadius = L.circle(e.latlng, 5000).addTo(mymap)
+				.bindPopup("This is your 5km radius").openPopup();
+		})
+
+
+			return usersMarker, usersCircle;
+
 		}
-
 		mymap.on('locationfound', onLocationFound);
 
 		function onLocationError(e) {
     		alert(e.message);
 		}
-
 		mymap.on('locationerror', onLocationError);
+		
+		
+		usersMarker.on('dragend', function(e){
+			var allowedRadius = L.circle(e.latlng, 5000).addTo(mymap)
+				.bindPopup("This is your 5km radius").openPopup();
+		})
+		
+		mymap.on('click', function(e){
+			function addMarker(e){
+			// Add marker to map at click location; add popup window
+			var newMarker = new L.circle(5000).addMarker.addTo(mymap)
+			}
+		})
+
 		</script>
 	</body>
 </html>
